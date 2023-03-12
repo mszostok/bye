@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"go.szostok.io/go-bye"
+	"go.szostok.io/bye"
 )
 
 func TestParentService(t *testing.T) {

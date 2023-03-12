@@ -6,7 +6,7 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	"go.szostok.io/go-bye/internal/multierror"
+	"go.szostok.io/bye/internal/multierror"
 )
 
 // ShutdownableService represents a service that supports graceful shutdown pattern.

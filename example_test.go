@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"go.szostok.io/go-bye"
+	"go.szostok.io/bye"
 )
 
 func ExampleParentService() {

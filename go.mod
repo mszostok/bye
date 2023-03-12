@@ -1,4 +1,4 @@
-module go.szostok.io/go-bye
+module go.szostok.io/bye
 
 go 1.19
 
