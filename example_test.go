@@ -12,10 +12,12 @@ func ExampleParentService() {
 	shutdown := bye.NewParentService(bye.WithTimeout(30 * time.Second))
 
 	shutdown.Register(bye.Func(func() {
+		time.Sleep(30 * time.Millisecond)
 		fmt.Println("Closing non error function call")
 	}))
 
 	shutdown.Register(bye.ErrFunc(func() error {
+		time.Sleep(15 * time.Millisecond)
 		fmt.Println("Closing error function call")
 		return errors.New("I don't want to quit!")
 	}))
@@ -25,7 +27,6 @@ func ExampleParentService() {
 	fmt.Println("Shutting down the application...")
 	err := shutdown.Shutdown()
 	fmt.Println(err)
-
 	// output:
 	// Shutting down the application...
 	// Closing example Shutdownable Service

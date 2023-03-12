@@ -87,9 +87,7 @@ func TestParentService(t *testing.T) {
 
 		expErr := heredoc.Doc(`
 			1 error occurred:
-				* oops! internal error occurred :)
-
-			`)
+				* oops! internal error occurred :)`)
 		childrenWatcher.ExpectedChildren(3)
 		svc.Register(&delayedServiceMock{unlockShutdown, childrenWatcher.ChildDone})
 		svc.Register(&erroneousServiceMock{unlockShutdown, childrenWatcher.ChildDone, context.Canceled})

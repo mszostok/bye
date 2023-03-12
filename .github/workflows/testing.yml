@@ -1,0 +1,85 @@
+name: Testing
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  cancel-previous-workflows:
+    name: Cancel previous workflows
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    # https://github.com/styfle/cancel-workflow-action#advanced-token-permissions
+    permissions:
+      actions: write
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@b173b6ec0100793626c2d9e6b90435061f4fc3e5
+        with:
+          access_token: ${{ github.token }}
+
+  unit-test:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: "Set git to use LF"
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - name: "Checkout code"
+        uses: actions/checkout@v3
+      - name: "Set up Go"
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - name: "Unit tests"
+        uses: magefile/mage-action@2c1951143e54356ebe6a0c6c971bae325b5b50f1
+        with:
+          version: latest
+          args: test:unit
+
+  language-check:
+    name: Check documentation language and grammar
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v3
+      - name: misspell
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          locale: "US"
+
+  code-quality-test:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v3
+      - name: "Set up Go"
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - name: "Check code quality"
+        uses: magefile/mage-action@2c1951143e54356ebe6a0c6c971bae325b5b50f1
+        with:
+          version: latest
+          args: lint
+      - name: "Detect git changes"
+        if: always()
+        run: |
+          if [[ $(git diff --stat) != '' ]]; then
+            echo -e '❌ \033[0;31m. Run 'mage docs:fmt'.\033[0m'
+            git diff --color
+            exit 1
+          else
+            echo '✔ No issues detected. Have a nice day :-)'
+          fi
