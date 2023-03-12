@@ -23,7 +23,7 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
       - name: "Unit tests"
-        uses: magefile/mage-action@2c1951143e54356ebe6a0c6c971bae325b5b50f1
+        uses: magefile/mage-action@3b833fb24c0d19eed3aa760b9eb285b4b84f420f
         with:
           version: latest
           args: test:unit
