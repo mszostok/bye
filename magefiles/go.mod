@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/magefile/mage v1.14.0
-	github.com/samber/lo v1.26.0
+	github.com/samber/lo v1.37.0
 	go.szostok.io/magex v0.0.0-20221010230035-8e88c2894472
 )
 
